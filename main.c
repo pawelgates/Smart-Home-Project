@@ -49,7 +49,7 @@ void buzzer_activate(){
 void InitTIMER0(void){
 	       
 	SYSCLK->CLKSEL1.TMR0_S = 0;
-  SYSCLK->APBCLK.TMR0_EN =1;
+  	SYSCLK->APBCLK.TMR0_EN =1;
 	TIMER0->TCSR.MODE=1;
 	TIMER0->TCSR.PRESCALE=127;
 	TIMER0->TCMPR = 46875;
@@ -199,88 +199,88 @@ void GPIOCDE_INT_CallBack(uint32_t GPA_IntStatus, uint32_t GPB_IntStatus)
 //MAIN 
 int32_t main()
 {
-		uint8_t  read_buf[16] = "        ";
-		uint8_t  write_buf[5] = "Hello";
-		uint8_t write_byte[1];
-    char     TEXT[8]     = "        ";
-    STR_UART_T sParam;
-		int led_state = 0;
-		int rgb_state = 0;
+	uint8_t  read_buf[16] = "        ";
+	uint8_t  write_buf[5] = "Hello";
+	uint8_t write_byte[1];
+    	char     TEXT[8]     = "        ";
+    	STR_UART_T sParam;
+	int led_state = 0;
+	int rgb_state = 0;
 
-		//Initialisation
-    UNLOCKREG();
-    DrvSYS_Open(48000000);
-    LOCKREG();
-		Init_LED();
-		OpenKeyPad();
-		InitTIMER0();
+	//Initialisation
+    	UNLOCKREG();
+    	DrvSYS_Open(48000000);
+    	LOCKREG();
+	Init_LED();
+	OpenKeyPad();
+	InitTIMER0();
   	TIMER0->TCSR.CEN = 0;
-    DrvGPIO_InitFunction(E_FUNC_UART0); // Set UART pins
-		Initial_panel();                 // initialize LCD panel
-	  clr_all_panel();                 // clear LCD panel					 
+    	DrvGPIO_InitFunction(E_FUNC_UART0); // Set UART pins
+	Initial_panel();                 // initialize LCD panel
+  	clr_all_panel();                 // clear LCD panel					 
 	
-		//INTERUPT
-		DrvGPIO_Open(E_GPC,14,E_IO_INPUT);
-		DrvGPIO_EnableInt(E_GPC, 14, E_IO_RISING, E_MODE_EDGE);
-		DrvGPIO_SetDebounceTime(5, 1);
-		DrvGPIO_EnableDebounce(E_GPC, 14);
-		DrvGPIO_SetIntCallback(GPIOAB_INT_CallBack, GPIOCDE_INT_CallBack);
+	//INTERUPT
+	DrvGPIO_Open(E_GPC,14,E_IO_INPUT);
+	DrvGPIO_EnableInt(E_GPC, 14, E_IO_RISING, E_MODE_EDGE);
+	DrvGPIO_SetDebounceTime(5, 1);
+	DrvGPIO_EnableDebounce(E_GPC, 14);
+	DrvGPIO_SetIntCallback(GPIOAB_INT_CallBack, GPIOCDE_INT_CallBack);
 		
-		//UART Setting
-    sParam.u32BaudRate 	= 9600;
-    sParam.u8cDataBits 	= DRVUART_DATABITS_8;
-    sParam.u8cStopBits 	= DRVUART_STOPBITS_1;
-    sParam.u8cParity 	= DRVUART_PARITY_NONE;
-    sParam.u8cRxTriggerLevel= DRVUART_FIFO_1BYTES;
-	  if(DrvUART_Open(UART_PORT0,&sParam) != E_SUCCESS);
+	//UART Setting
+	sParam.u32BaudRate 	= 9600;
+	sParam.u8cDataBits 	= DRVUART_DATABITS_8;
+	sParam.u8cStopBits 	= DRVUART_STOPBITS_1;
+	sParam.u8cParity 	= DRVUART_PARITY_NONE;
+	sParam.u8cRxTriggerLevel= DRVUART_FIFO_1BYTES;
+	if(DrvUART_Open(UART_PORT0,&sParam) != E_SUCCESS);
 
-	  //Start settings	
-	  print_lcd(1, TEXT);
-		DrvGPIO_ClrBit(E_GPB, 14);
-		DrvGPIO_ClrBit(E_GPB, 15);
-		DrvGPIO_ClrBit(E_GPC, 4);
+	//Start settings	
+	print_lcd(1, TEXT);
+	DrvGPIO_ClrBit(E_GPB, 14);
+	DrvGPIO_ClrBit(E_GPB, 15);
+	DrvGPIO_ClrBit(E_GPC, 4);
     		   
-	  while(1) {
-			print_lcd(0, "                ");
-			print_lcd(1, "Welcome Home    ");	
-			print_lcd(2, "                ");
-			print_lcd(3, "                ");
-			
-			DrvUART_Read(UART_PORT0,read_buf,DATASIZE); 
-			sprintf(TEXT,"%s",read_buf); // display on LCD
-			print_lcd(0, TEXT);
+	while(1) {
+		print_lcd(0, "                ");
+		print_lcd(1, "Welcome Home    ");	
+		print_lcd(2, "                ");
+		print_lcd(3, "                ");
 
-			// LED 1
-			if(strncmp(TEXT, "ld1on", 5) == 0){
-					DrvGPIO_SetBit(E_GPB, 14); 
-			}
-			else if(strncmp(TEXT, "ld1of", 5) == 0){
-					DrvGPIO_ClrBit(E_GPB, 14); 
-			}
-			
-			// LED 2
-			if(strncmp(TEXT, "ld2on", 5) == 0){
-					DrvGPIO_SetBit(E_GPB, 15); 
-			}
-			else if(strncmp(TEXT, "ld2of", 5) == 0){
-					DrvGPIO_ClrBit(E_GPB, 15); 
-			}
-				
-			// FAN
-			if(strncmp(TEXT, "fanon", 5) == 0){
-					DrvGPIO_SetBit(E_GPC, 4); 
-			}
-			else if(strncmp(TEXT, "fanof", 5) == 0){
-					DrvGPIO_ClrBit(E_GPC, 4); 
-			}
-			
-			//DOOR
-			if(strncmp(TEXT, "opend", 5) == 0){
-					if(TIMER0->TCSR.CEN == 0){
-						door();
-					}
-			}
+		DrvUART_Read(UART_PORT0,read_buf,DATASIZE); 
+		sprintf(TEXT,"%s",read_buf); // display on LCD
+		print_lcd(0, TEXT);
+
+		// LED 1
+		if(strncmp(TEXT, "ld1on", 5) == 0){
+				DrvGPIO_SetBit(E_GPB, 14); 
 		}
+		else if(strncmp(TEXT, "ld1of", 5) == 0){
+				DrvGPIO_ClrBit(E_GPB, 14); 
+		}
+
+		// LED 2
+		if(strncmp(TEXT, "ld2on", 5) == 0){
+				DrvGPIO_SetBit(E_GPB, 15); 
+		}
+		else if(strncmp(TEXT, "ld2of", 5) == 0){
+				DrvGPIO_ClrBit(E_GPB, 15); 
+		}
+
+		// FAN
+		if(strncmp(TEXT, "fanon", 5) == 0){
+				DrvGPIO_SetBit(E_GPC, 4); 
+		}
+		else if(strncmp(TEXT, "fanof", 5) == 0){
+				DrvGPIO_ClrBit(E_GPC, 4); 
+		}
+
+		//DOOR
+		if(strncmp(TEXT, "opend", 5) == 0){
+				if(TIMER0->TCSR.CEN == 0){
+					door();
+				}
+		}
+	}
 }
 
 
