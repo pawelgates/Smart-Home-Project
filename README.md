@@ -22,6 +22,5 @@
 ![alt text](https://github.com/pawelgates/Smart-Home-Project/blob/main/pics/pic2.png) 
 ![alt text](https://github.com/pawelgates/Smart-Home-Project/blob/main/pics/pic3.png) 
 
-#### Video:
-![alt text](https://github.com/pawelgates/Smart-Home-Project/blob/main/pics/movie.mp4) 
+ 
 
