@@ -17,7 +17,7 @@
 
 ![alt text](https://github.com/pawelgates/Smart-Home-Project/blob/main/pics/flowchart.png) 
 
-[![Watch the video](https://youtu.be/CbeWg3qcG9w)
+[![Watch the video](https://img.youtube.com/vi/T-D1KVIuvjA/maxresdefault.jpg)](https://youtu.be/CbeWg3qcG9w)
 
 #### Pictures:
 ![alt text](https://github.com/pawelgates/Smart-Home-Project/blob/main/pics/pic1.png) 
