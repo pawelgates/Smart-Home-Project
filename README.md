@@ -23,9 +23,6 @@ User has Bluetooth Application with 4 buttons: "Light 1", "Light 2", "FAN", "Doo
 
 ![alt text](https://github.com/pawelgates/Smart-Home-Project/blob/main/pics/flowchart.png) 
 
-#### Video:
-[![Watch the video](https://i.imgur.com/vKb2F1B.png)](https://youtu.be/CbeWg3qcG9w)
-
 #### Pictures:
 ![alt text](https://github.com/pawelgates/Smart-Home-Project/blob/main/pics/pic1.png) 
 ![alt text](https://github.com/pawelgates/Smart-Home-Project/blob/main/pics/pic2.png) 
